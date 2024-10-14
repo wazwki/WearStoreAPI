@@ -10,6 +10,8 @@ import (
 	"WearStoreAPI/db"
 	"WearStoreAPI/internal/handlers"
 	"WearStoreAPI/internal/middlewares"
+	"WearStoreAPI/internal/repository"
+	"WearStoreAPI/internal/service"
 	"WearStoreAPI/pkg/logger"
 	"context"
 	"fmt"
@@ -61,11 +63,17 @@ func main() {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 
-	mux.HandleFunc("GET /api/v1/wear/{id}", handlers.GetWearHandler)
-	mux.HandleFunc("GET /api/v1/wear", handlers.GetAllWearHandler)
-	mux.HandleFunc("POST /api/v1/wear", handlers.PostWearHandler)
-	mux.HandleFunc("PATCH /api/v1/wear/{id}", handlers.PatchWearHandler)
-	mux.HandleFunc("DELETE /api/v1/wear/{id}", handlers.DeleteWearHandler)
+	postgres := repository.ProductRepository{DataBase: db.DB}
+
+	productService := service.NewProductService(&postgres)
+
+	productHandlers := handlers.NewProductHandler(productService)
+
+	mux.HandleFunc("GET /api/v1/wear/{id}", productHandlers.GetWearHandler)
+	mux.HandleFunc("GET /api/v1/wear", productHandlers.GetAllWearHandler)
+	mux.HandleFunc("POST /api/v1/wear", productHandlers.PostWearHandler)
+	mux.HandleFunc("PATCH /api/v1/wear/{id}", productHandlers.PatchWearHandler)
+	mux.HandleFunc("DELETE /api/v1/wear/{id}", productHandlers.DeleteWearHandler)
 
 	mux.HandleFunc("/swagger", serveSwagger)
 

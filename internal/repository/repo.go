@@ -1,23 +1,38 @@
 package repository
 
-import "WearStoreAPI/internal/models"
+import (
+	"WearStoreAPI/internal/models"
+	"database/sql"
+)
 
-func GetWear(id string) (models.Item, error) {
-	return models.Item{}, nil
+type ProductStorage interface {
+	FindById(id string) (*models.Item, error)
+	FindAll() ([]*models.Item, error)
+	Create(i *models.Item) error
+	Patch(i *models.Item, id string) error
+	Delete(id string) error
 }
 
-func GetAllWear() ([]models.Item, error) {
+type ProductRepository struct {
+	DataBase *sql.DB
+}
+
+func (repo *ProductRepository) FindById(id string) (*models.Item, error) {
+	return &models.Item{}, nil
+}
+
+func (repo *ProductRepository) FindAll() ([]*models.Item, error) {
 	return nil, nil
 }
 
-func PostWear(i models.Item) error {
+func (repo *ProductRepository) Create(i *models.Item) error {
 	return nil
 }
 
-func PatchWear(i models.Item) error {
+func (repo *ProductRepository) Patch(i *models.Item, id string) error {
 	return nil
 }
 
-func DeleteWear(id string) error {
+func (repo *ProductRepository) Delete(id string) error {
 	return nil
 }
