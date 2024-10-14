@@ -61,7 +61,7 @@ func (h *ProductHandler) PostWearHandler(w http.ResponseWriter, r *http.Request)
 	w.WriteHeader(http.StatusCreated)
 }
 
-func (h *ProductHandler) PatchWearHandler(w http.ResponseWriter, r *http.Request) {
+func (h *ProductHandler) UpdateWearHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	var item *models.Item
 
@@ -71,7 +71,7 @@ func (h *ProductHandler) PatchWearHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	err := h.service.PatchWear(item, id)
+	err := h.service.UpdateWear(item, id)
 	if err != nil {
 		slog.Error(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)

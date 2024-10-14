@@ -9,7 +9,7 @@ type ProductStorage interface {
 	FindById(id string) (*models.Item, error)
 	FindAll() ([]*models.Item, error)
 	Create(i *models.Item) error
-	Patch(i *models.Item, id string) error
+	Update(i *models.Item, id string) error
 	Delete(id string) error
 }
 
@@ -65,7 +65,7 @@ func (repo *ProductRepository) Create(i *models.Item) error {
 	return nil
 }
 
-func (repo *ProductRepository) Patch(i *models.Item, id string) error {
+func (repo *ProductRepository) Update(i *models.Item, id string) error {
 	_, err := repo.DataBase.Exec(`UPDATE products_table SET price=$1, title=$2, photo=$3, description=$4 WHERE id=$5`, i.Price, i.Title, i.Photo, i.Description, id)
 	if err != nil {
 		return err

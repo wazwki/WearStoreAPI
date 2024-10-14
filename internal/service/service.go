@@ -45,8 +45,8 @@ func (p *ProductService) CreateWear(i *models.Item) error {
 	return nil
 }
 
-func (p *ProductService) PatchWear(i *models.Item, id string) error {
-	err := p.repo.Patch(i, id)
+func (p *ProductService) UpdateWear(i *models.Item, id string) error {
+	err := p.repo.Update(i, id)
 	if err != nil {
 		slog.Error(err.Error())
 		return err

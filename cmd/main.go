@@ -72,7 +72,7 @@ func main() {
 	mux.HandleFunc("GET /api/v1/wear/{id}", productHandlers.GetWearHandler)
 	mux.HandleFunc("GET /api/v1/wear", productHandlers.GetAllWearHandler)
 	mux.HandleFunc("POST /api/v1/wear", productHandlers.PostWearHandler)
-	mux.HandleFunc("PATCH /api/v1/wear/{id}", productHandlers.PatchWearHandler)
+	mux.HandleFunc("PATCH /api/v1/wear/{id}", productHandlers.UpdateWearHandler)
 	mux.HandleFunc("DELETE /api/v1/wear/{id}", productHandlers.DeleteWearHandler)
 
 	mux.HandleFunc("/swagger", serveSwagger)
