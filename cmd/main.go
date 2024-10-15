@@ -52,7 +52,6 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
-
 	corsMux := middlewares.CorsMiddleware(mux)
 
 	srv := &http.Server{
@@ -60,22 +59,35 @@ func main() {
 		Handler: corsMux,
 	}
 
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
-
-	postgres := repository.ProductRepository{DataBase: db.DB}
-
-	productService := service.NewProductService(&postgres)
-
+	productPostgres := repository.ProductRepository{DataBase: db.DB}
+	productService := service.NewProductService(&productPostgres)
 	productHandlers := handlers.NewProductHandler(productService)
+
+	postWearHandler := http.HandlerFunc(productHandlers.PostWearHandler)
+	updateWearHandler := http.HandlerFunc(productHandlers.UpdateWearHandler)
+	deleteWearHandler := http.HandlerFunc(productHandlers.DeleteWearHandler)
 
 	mux.HandleFunc("GET /api/v1/wear/{id}", productHandlers.GetWearHandler)
 	mux.HandleFunc("GET /api/v1/wear", productHandlers.GetAllWearHandler)
-	mux.HandleFunc("POST /api/v1/wear", productHandlers.PostWearHandler)
-	mux.HandleFunc("PATCH /api/v1/wear/{id}", productHandlers.UpdateWearHandler)
-	mux.HandleFunc("DELETE /api/v1/wear/{id}", productHandlers.DeleteWearHandler)
+	mux.Handle("POST /api/v1/wear", middlewares.AdminMiddleware(postWearHandler))
+	mux.Handle("PUT /api/v1/wear/{id}", middlewares.AdminMiddleware(updateWearHandler))
+	mux.Handle("DELETE /api/v1/wear/{id}", middlewares.AdminMiddleware(deleteWearHandler))
 
-	mux.HandleFunc("/swagger", serveSwagger)
+	userPostgres := repository.UserRepository{DataBase: db.DB}
+	userService := service.NewUserService(&userPostgres)
+	userHandlers := handlers.NewUserHandler(userService)
+
+	mux.HandleFunc("GET /api/v1/user/{id}", userHandlers.GetUserHandler)
+	mux.HandleFunc("PUT /api/v1/user/{id}", userHandlers.UpdateUserHandler)
+	mux.HandleFunc("DELETE /api/v1/user/{id}", userHandlers.DeleteUserHandler)
+	mux.HandleFunc("POST /api/v1/login", userHandlers.LoginHandler)
+	mux.HandleFunc("POST /api/v1/register", userHandlers.RegisterHandler)
+
+	swaggerHandler := http.HandlerFunc(serveSwagger)
+	mux.Handle("/swagger", middlewares.AdminMiddleware(swaggerHandler))
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 
 	go func() {
 		slog.Info(fmt.Sprintf("Server up with address: %v:%v", host, port))

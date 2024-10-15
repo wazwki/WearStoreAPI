@@ -1,15 +1,19 @@
 # Wear Store API.
 
 -postgres + migrations
--docker
-redis
+-godotenv
 -log/slog
+-swagger/open-api
+
+-jwt
+redis
+
 prometheus/grafana 
 pprof
+
 viper
 golangci-lint
--godotenv
-swagger/open-api
-jwt
+
+-docker
 k8s
 ci/cd
