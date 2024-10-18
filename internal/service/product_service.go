@@ -3,7 +3,6 @@ package service
 import (
 	"WearStoreAPI/internal/models"
 	"WearStoreAPI/internal/repository"
-	"log/slog"
 )
 
 type ProductService struct {
@@ -18,7 +17,6 @@ func (p *ProductService) GetWearData(id string) (*models.Item, error) {
 	wear, err := p.repo.FindById(id)
 
 	if err != nil {
-		slog.Error(err.Error())
 		return nil, err
 	}
 
@@ -29,7 +27,6 @@ func (p *ProductService) GetAllWearData() ([]*models.Item, error) {
 	wears, err := p.repo.FindAll()
 
 	if err != nil {
-		slog.Error(err.Error())
 		return nil, err
 	}
 
@@ -39,7 +36,6 @@ func (p *ProductService) GetAllWearData() ([]*models.Item, error) {
 func (p *ProductService) CreateWear(i *models.Item) error {
 	err := p.repo.Create(i)
 	if err != nil {
-		slog.Error(err.Error())
 		return err
 	}
 	return nil
@@ -48,7 +44,6 @@ func (p *ProductService) CreateWear(i *models.Item) error {
 func (p *ProductService) UpdateWear(i *models.Item, id string) error {
 	err := p.repo.Update(i, id)
 	if err != nil {
-		slog.Error(err.Error())
 		return err
 	}
 	return nil
@@ -57,7 +52,6 @@ func (p *ProductService) UpdateWear(i *models.Item, id string) error {
 func (p *ProductService) DeleteWear(id string) error {
 	err := p.repo.Delete(id)
 	if err != nil {
-		slog.Error(err.Error())
 		return err
 	}
 	return nil

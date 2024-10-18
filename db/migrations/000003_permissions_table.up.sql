@@ -1,4 +1,4 @@
 CREATE TABLE permissions_table (
-    user_id INT REFERENCES users(id),
+    email INT REFERENCES users_table(email),
     role VARCHAR(50) NOT NULL
 );

@@ -18,9 +18,9 @@ type UserRepository struct {
 
 func (repo *UserRepository) FindById(id string) (*models.User, error) {
 	var user models.User
-	row := repo.DataBase.QueryRow(`SELECT email, first_name, last_name FROM users_table WHERE id=$1`, id)
+	row := repo.DataBase.QueryRow(`SELECT email, first_name, last_name, password FROM users_table WHERE id=$1`, id)
 
-	if err := row.Scan(&user.Email, &user.FirstName, &user.LastName); err != nil {
+	if err := row.Scan(&user.Email, &user.FirstName, &user.LastName, &user.Password); err != nil {
 		return nil, err
 	}
 
